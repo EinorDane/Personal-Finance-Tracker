@@ -4,10 +4,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-// Add mocks for dependencies your context needs
-@SpringBootTest
-class FinancetrackerApplicationTests {
+// Import your services/repositories, e.g.,
+import com.niog.financetracker.security.JwtUtil;
+import com.niog.financetracker.repository.UserRepository;
 
+@SpringBootTest
+public class FinancetrackerApplicationTests {
+
+    // Mock specific dependencies that are required during context load
     @MockBean
     private JwtUtil jwtUtil;
 
@@ -16,6 +20,6 @@ class FinancetrackerApplicationTests {
 
     @Test
     void contextLoads() {
-        // Test will pass if the context loads with mocks
+        // This test just checks if the Spring Application Context loads successfully.
     }
 }
