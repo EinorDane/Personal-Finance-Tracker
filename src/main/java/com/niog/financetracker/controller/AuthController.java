@@ -6,6 +6,7 @@ import com.niog.financetracker.model.User;
 import com.niog.financetracker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,11 @@ public class AuthController {
 
     @Autowired
     private JwtUtil jwtUtil;
-    
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
 
     @PostMapping("/login")
@@ -43,6 +47,7 @@ public class AuthController {
     @PostMapping("/register")
     public String register(@RequestBody User user) {
         // In real app, hash password with BCryptPasswordEncoder!
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user); // For now, plain text (NOT recommended for production)
         return "User registered successfully";
     }
