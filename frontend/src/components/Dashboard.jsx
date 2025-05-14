@@ -1,3 +1,4 @@
+// src/components/Dashboard.jsx
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 
@@ -9,7 +10,9 @@ function Dashboard() {
   const [category, setCategory] = useState('');
   const [date, setDate] = useState('');
   const [editTransactionId, setEditTransactionId] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('');
 
+  // Fetch data when component loads
   useEffect(() => {
     api.get('/api/transactions')
       .then(res => setTransactions(res.data))
@@ -27,34 +30,34 @@ function Dashboard() {
     setEditTransactionId(null);
   };
 
-  const addTransaction = () => {
-    api.post('/api/transactions', {
-      description,
-      amount: parseFloat(amount),
-      category,
-      date,
-    })
-    .then(res => {
+  const addTransaction = async () => {
+    try {
+      const res = await api.post('/api/transactions', {
+        description,
+        amount: parseFloat(amount),
+        category,
+        date,
+      });
       setTransactions([...transactions, res.data]);
       resetForm();
-    })
-    .catch(() => alert('Error adding transaction'));
+    } catch {
+      alert('Error adding transaction');
+    }
   };
 
-  const updateTransaction = () => {
-    api.put(`/api/transactions/${editTransactionId}`, {
-      description,
-      amount: parseFloat(amount),
-      category,
-      date,
-    })
-    .then(res => {
-      setTransactions(
-        transactions.map(t => (t.id === editTransactionId ? res.data : t))
-      );
+  const updateTransaction = async () => {
+    try {
+      const res = await api.put(`/api/transactions/${editTransactionId}`, {
+        description,
+        amount: parseFloat(amount),
+        category,
+        date,
+      });
+      setTransactions(transactions.map(t => (t.id === editTransactionId ? res.data : t)));
       resetForm();
-    })
-    .catch(() => alert('Error updating'));
+    } catch {
+      alert('Error updating transaction');
+    }
   };
 
   const deleteTransaction = (id) => {
@@ -65,37 +68,80 @@ function Dashboard() {
       .catch(() => alert('Error deleting'));
   };
 
-  // Minimal UI for demonstration
+  const handleEdit = (t) => {
+    setDescription(t.description);
+    setAmount(t.amount);
+    setCategory(t.category);
+    setDate(t.date);
+    setEditTransactionId(t.id);
+  };
+
+  const filteredTransactions = transactions.filter(t => !selectedCategory || t.category === selectedCategory);
+
   return (
-    <div className="container mt-4">
+    <div className="container py-4">
+      {/* Transaction list and CRUD */}
       <h2>Transactions</h2>
       <ul>
-        {transactions.map(t => (
-          <li key={t.id}>
-            {t.description} - {t.amount} - {t.category} - {t.date}
-            <button onClick={() => {
-              setEditTransactionId(t.id);
-              setDescription(t.description);
-              setAmount(t.amount);
-              setCategory(t.category);
-              setDate(t.date);
-            }}>Edit</button>
-            <button onClick={() => deleteTransaction(t.id)}>Delete</button>
+        {filteredTransactions.map(t => (
+          <li key={t.id} className="mb-2 p-2 border rounded d-flex justify-content-between align-items-center">
+            {t.description} (${t.amount}) [{t.category}] {t.date}
+            <div>
+              <button className="btn btn-sm btn-danger me-2" onClick={() => deleteTransaction(t.id)}>Delete</button>
+              <button className="btn btn-sm btn-secondary" onClick={() => handleEdit(t)}>Edit</button>
+            </div>
           </li>
         ))}
       </ul>
-      <h3>{editTransactionId ? 'Edit' : 'Add'} Transaction</h3>
-      <input placeholder="Description" value={description} onChange={e => setDescription(e.target.value)} />
-      <input placeholder="Amount" type="number" value={amount} onChange={e => setAmount(e.target.value)} />
-      <select value={category} onChange={e => setCategory(e.target.value)}>
-        <option value="">Select Category</option>
-        {categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
-      </select>
-      <input placeholder="Date" type="date" value={date} onChange={e => setDate(e.target.value)} />
-      <button onClick={editTransactionId ? updateTransaction : addTransaction}>
-        {editTransactionId ? 'Update' : 'Add'}
-      </button>
-      <button onClick={resetForm}>Clear</button>
+
+      {/* Add/Edit Transaction form */}
+      <h3 className="mt-4">{editTransactionId ? 'Edit' : 'Add'} Transaction</h3>
+      <div className="mb-3">
+        <input
+          placeholder="Description"
+          className="form-control"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </div>
+      <div className="mb-3">
+        <input
+          placeholder="Amount"
+          type="number"
+          className="form-control"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
+      </div>
+      <div className="mb-3">
+        <select
+          className="form-select"
+          value={category}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          <option value="">Select Category</option>
+          {categories.map(c => (
+            <option key={c.id} value={c.name}>{c.name}</option>
+          ))}
+        </select>
+      </div>
+      <div className="mb-3">
+        <input
+          placeholder="Date"
+          type="date"
+          className="form-control"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
+      </div>
+      <div className="d-flex gap-2">
+        <button className="btn btn-primary" onClick={editTransactionId ? updateTransaction : addTransaction}>
+          {editTransactionId ? 'Update' : 'Add'}
+        </button>
+        {editTransactionId && (
+          <button className="btn btn-secondary" onClick={resetForm}>Cancel</button>
+        )}
+      </div>
     </div>
   );
 }

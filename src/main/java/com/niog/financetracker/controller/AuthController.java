@@ -28,7 +28,7 @@ public class AuthController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    private UserRepository userRepository;
+    
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody AuthRequest authRequest) throws Exception {
