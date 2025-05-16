@@ -17,5 +17,10 @@ public class Transaction {
     private String category; // for simplicity, just a string here
     private LocalDate date;
 
-    // Optional: link to User if multi-user system
+    private boolean recurring = false;
+    private String recurrenceRule; // e.g., "monthly", "weekly"
+
+  
+
+
 }

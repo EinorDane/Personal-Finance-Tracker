@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -45,11 +47,15 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody User user) {
-        // In real app, hash password with BCryptPasswordEncoder!
+    public ResponseEntity<?> register(@RequestBody User user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body("Username already exists");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user); // For now, plain text (NOT recommended for production)
-        return "User registered successfully";
+        userRepository.save(user);
+        return ResponseEntity.ok("User registered successfully");
     }
 }
 
