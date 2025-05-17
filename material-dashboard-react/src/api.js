@@ -1,7 +1,10 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: "http://localhost:8080", // Make sure this matches your backend server
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 // Attach token dynamically if exists, but NOT for auth endpoints

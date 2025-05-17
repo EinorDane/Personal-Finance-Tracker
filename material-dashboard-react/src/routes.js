@@ -50,6 +50,8 @@ import TableChartIcon from "@mui/icons-material/TableChart";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import ProtectedRoute from "components/ProtectedRoute";
+import triggerBackup from "utils/triggerBackup";
+import triggerRestore from "utils/triggerRestore";
 
 const routes = [
   {
@@ -66,18 +68,6 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Transactions",
-    key: "transactions",
-    icon: <ReceiptIcon fontSize="small" />,
-    route: "/transactions",
-    component: (
-      <ProtectedRoute>
-        <Transactions />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    type: "collapse",
     name: "Budgets",
     key: "budgets",
     icon: <TableChartIcon fontSize="small" />,
@@ -85,6 +75,18 @@ const routes = [
     component: (
       <ProtectedRoute>
         <Budgets />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    type: "collapse",
+    name: "Transactions",
+    key: "transactions",
+    icon: <ReceiptIcon fontSize="small" />,
+    route: "/transactions",
+    component: (
+      <ProtectedRoute>
+        <Transactions />
       </ProtectedRoute>
     ),
   },
@@ -111,6 +113,20 @@ const routes = [
         <Goals />
       </ProtectedRoute>
     ),
+  },
+  {
+    type: "collapse",
+    name: "Database Backup",
+    key: "admin-backup",
+    icon: <Icon fontSize="small">backup</Icon>,
+    onClick: triggerBackup,
+  },
+  {
+    type: "collapse",
+    name: "Restore Database",
+    key: "restore-backup",
+    icon: <Icon fontSize="small">restore</Icon>,
+    onClick: triggerRestore,
   },
 ];
 

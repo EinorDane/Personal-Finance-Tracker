@@ -59,6 +59,7 @@
     target DOUBLE
     );
         ```
+        
 3. **(Optional) Restore from a backup:**  
    If you have a backup file (e.g., `db_backups\financetracker_backup_YYYY-MM-DD_HH-MM-SS.sql`), run:
    ```

@@ -11,4 +11,8 @@ public class Budget {
     private Long id;
     private String category;
     private double amount;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

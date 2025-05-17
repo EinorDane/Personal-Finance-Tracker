@@ -20,7 +20,9 @@ public class Transaction {
     private boolean recurring = false;
     private String recurrenceRule; // e.g., "monthly", "weekly"
 
-  
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-
+    // getters and setters for user
 }
