@@ -49,6 +49,11 @@ export default function Transactions() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [transactionToDelete, setTransactionToDelete] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [salaryDialogOpen, setSalaryDialogOpen] = useState(false);
+  const [salaryAmount, setSalaryAmount] = useState("");
+  const [salaryDescription, setSalaryDescription] = useState("Salary");
+  const [salaryDate, setSalaryDate] = useState(new Date().toISOString().slice(0, 10));
+  const [type, setType] = useState("Expense");
 
   useEffect(() => {
     fetchTransactions();
@@ -89,18 +94,25 @@ export default function Transactions() {
       setSnackbar({ open: true, message: "All fields are required.", severity: "warning" });
       return;
     }
+    let finalAmount = Number(amount);
+    if (type === "Expense" && finalAmount > 0) {
+      finalAmount = -finalAmount;
+    }
+    if (type === "Income" && finalAmount < 0) {
+      finalAmount = Math.abs(finalAmount);
+    }
     setLoading(true);
     try {
       if (editTransactionId) {
         await api.put(`/api/transactions/${editTransactionId}`, {
           description,
-          amount,
+          amount: finalAmount,
           category,
           date,
         });
         setSnackbar({ open: true, message: "Transaction updated.", severity: "success" });
       } else {
-        await api.post("/api/transactions", { description, amount, category, date });
+        await api.post("/api/transactions", { description, amount: finalAmount, category, date });
         setSnackbar({ open: true, message: "Transaction added.", severity: "success" });
       }
       fetchTransactions();
@@ -129,6 +141,58 @@ export default function Transactions() {
       setSnackbar({ open: true, message: "Error deleting transaction.", severity: "error" });
     }
     setLoading(false);
+  };
+
+  const addTestIncome = async () => {
+    try {
+      await api.post("/api/transactions", {
+        description: "Test Salary",
+        amount: 2000,
+        category:
+          categories.find((c) => c.name.toLowerCase() === "income")?.name ||
+          categories[0]?.name ||
+          "Income",
+        date: new Date().toISOString().slice(0, 10),
+      });
+      fetchTransactions && fetchTransactions();
+      setSnackbar({
+        open: true,
+        message: "Test income added!",
+        severity: "success",
+      });
+    } catch {
+      setSnackbar({
+        open: true,
+        message: "Failed to add test income",
+        severity: "error",
+      });
+    }
+  };
+
+  const handleSimulateSalary = async () => {
+    if (!salaryAmount) {
+      setSnackbar({ open: true, message: "Amount is required.", severity: "warning" });
+      return;
+    }
+    try {
+      await api.post("/api/transactions", {
+        description: salaryDescription || "Salary",
+        amount: Number(salaryAmount),
+        category:
+          categories.find((c) => c.name.toLowerCase() === "income")?.name ||
+          categories[0]?.name ||
+          "Income",
+        date: salaryDate,
+      });
+      fetchTransactions && fetchTransactions();
+      setSnackbar({ open: true, message: "Salary added!", severity: "success" });
+      setSalaryDialogOpen(false);
+      setSalaryAmount("");
+      setSalaryDescription("Salary");
+      setSalaryDate(new Date().toISOString().slice(0, 10));
+    } catch {
+      setSnackbar({ open: true, message: "Failed to add salary", severity: "error" });
+    }
   };
 
   // Filter transactions by search and category
@@ -189,6 +253,13 @@ export default function Transactions() {
                     margin="normal"
                     InputLabelProps={{ shrink: true }}
                   />
+                  <FormControl fullWidth margin="normal">
+                    <InputLabel>Type</InputLabel>
+                    <Select value={type} onChange={(e) => setType(e.target.value)} label="Type">
+                      <MenuItem value="Income">Income</MenuItem>
+                      <MenuItem value="Expense">Expense</MenuItem>
+                    </Select>
+                  </FormControl>
                   <Box mt={2} display="flex" gap={1}>
                     <Button
                       type="submit"
@@ -236,6 +307,14 @@ export default function Transactions() {
                     </Select>
                   </FormControl>
                 </Box>
+                <Button
+                  variant="contained"
+                  color="info"
+                  onClick={() => setSalaryDialogOpen(true)}
+                  sx={{ mb: 2, ml: 2 }}
+                >
+                  Simulate Salary Deposit
+                </Button>
                 {loading ? (
                   <Box display="flex" justifyContent="center" my={4}>
                     <CircularProgress />
@@ -256,7 +335,12 @@ export default function Transactions() {
                         {filteredTransactions.map((t) => (
                           <TableRow key={t.id}>
                             <TableCell>{t.description}</TableCell>
-                            <TableCell>{t.amount}</TableCell>
+                            <TableCell>
+                              {Number(t.amount).toLocaleString("en-PH", {
+                                style: "currency",
+                                currency: "PHP",
+                              })}
+                            </TableCell>
                             <TableCell>{t.category}</TableCell>
                             <TableCell>{t.date}</TableCell>
                             <TableCell>
@@ -312,6 +396,42 @@ export default function Transactions() {
           message={snackbar.message}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         />
+        {/* Simulate Salary Dialog */}
+        <Dialog open={salaryDialogOpen} onClose={() => setSalaryDialogOpen(false)}>
+          <DialogTitle>Simulate Salary Deposit</DialogTitle>
+          <DialogContent>
+            <TextField
+              label="Amount"
+              type="number"
+              value={salaryAmount}
+              onChange={(e) => setSalaryAmount(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="Description"
+              value={salaryDescription}
+              onChange={(e) => setSalaryDescription(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="Date"
+              type="date"
+              value={salaryDate}
+              onChange={(e) => setSalaryDate(e.target.value)}
+              fullWidth
+              margin="normal"
+              InputLabelProps={{ shrink: true }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setSalaryDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleSimulateSalary} variant="contained" color="info">
+              Add Salary
+            </Button>
+          </DialogActions>
+        </Dialog>
       </MDBox>
     </DashboardLayout>
   );

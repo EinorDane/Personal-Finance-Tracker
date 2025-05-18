@@ -72,7 +72,9 @@ export default function Dashboard() {
                     <AccountBalanceWalletIcon sx={{ mr: 1, verticalAlign: "middle" }} />
                     Balance
                   </Typography>
-                  <Typography variant="h5">${balance.toFixed(2)}</Typography>
+                  <Typography variant="h5">
+                    {balance.toLocaleString("en-PH", { style: "currency", currency: "PHP" })}
+                  </Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -84,7 +86,7 @@ export default function Dashboard() {
                     Income
                   </Typography>
                   <Typography variant="h5" color="success.main">
-                    ${totalIncome.toFixed(2)}
+                    {totalIncome.toLocaleString("en-PH", { style: "currency", currency: "PHP" })}
                   </Typography>
                 </CardContent>
               </Card>
@@ -97,7 +99,10 @@ export default function Dashboard() {
                     Expenses
                   </Typography>
                   <Typography variant="h5" color="error.main">
-                    ${Math.abs(totalExpense).toFixed(2)}
+                    {Math.abs(totalExpense).toLocaleString("en-PH", {
+                      style: "currency",
+                      currency: "PHP",
+                    })}
                   </Typography>
                 </CardContent>
               </Card>

@@ -28,17 +28,14 @@ const { md } = boxShadows;
 const card = {
   styleOverrides: {
     root: {
-      display: "flex",
-      flexDirection: "column",
-      position: "relative",
-      minWidth: 0,
-      wordWrap: "break-word",
-      backgroundColor: white.main,
-      backgroundClip: "border-box",
-      border: `${borderWidth[0]} solid ${rgba(black.main, 0.125)}`,
-      borderRadius: borderRadius.xl,
-      boxShadow: md,
-      overflow: "visible",
+      borderRadius: "20px",
+      boxShadow: "0 8px 32px 0 rgba(60,72,100,0.16)",
+      transition:
+        "box-shadow 0.3s cubic-bezier(.25,.8,.25,1), transform 0.3s cubic-bezier(.25,.8,.25,1)",
+      "&:hover": {
+        boxShadow: "0 16px 48px 0 rgba(60,72,100,0.24)",
+        transform: "scale(1.025)",
+      },
     },
   },
 };

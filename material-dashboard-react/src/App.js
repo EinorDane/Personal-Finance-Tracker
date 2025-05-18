@@ -31,6 +31,7 @@ import Reports from "views/Reports";
 import Goals from "views/Goals";
 import ProtectedRoute from "components/ProtectedRoute";
 import { useMaterialUIController } from "context";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function App() {
   const [controller] = useMaterialUIController();
@@ -43,56 +44,66 @@ export default function App() {
       <CssBaseline />
       {!hideSidenav && (
         <>
-          <Sidenav color={sidenavColor} brandName="Material Dashboard 2" routes={routes} />
+          <Sidenav color={sidenavColor} brandName="Financia" routes={routes} />
           <Configurator />
         </>
       )}
-      <Routes>
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/transactions"
-          element={
-            <ProtectedRoute>
-              <Transactions />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/budgets"
-          element={
-            <ProtectedRoute>
-              <Budgets />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/reports"
-          element={
-            <ProtectedRoute>
-              <Reports />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/goals"
-          element={
-            <ProtectedRoute>
-              <Goals />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/authentication/sign-in" element={<SignIn />} />
-        <Route path="/authentication/sign-up" element={<SignUp />} />
-        <Route path="/" element={<Navigate to="/authentication/sign-in" />} />
-        <Route path="*" element={<Navigate to="/dashboard" />} />
-      </Routes>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -24 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Routes>
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/transactions"
+              element={
+                <ProtectedRoute>
+                  <Transactions />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/budgets"
+              element={
+                <ProtectedRoute>
+                  <Budgets />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/reports"
+              element={
+                <ProtectedRoute>
+                  <Reports />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/goals"
+              element={
+                <ProtectedRoute>
+                  <Goals />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/authentication/sign-in" element={<SignIn />} />
+            <Route path="/authentication/sign-up" element={<SignUp />} />
+            <Route path="/" element={<Navigate to="/authentication/sign-in" />} />
+            <Route path="*" element={<Navigate to="/dashboard" />} />
+          </Routes>
+        </motion.div>
+      </AnimatePresence>
     </ThemeProvider>
   );
 }

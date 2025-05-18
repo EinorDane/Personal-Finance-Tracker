@@ -43,10 +43,13 @@ export default function Budgets() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [budgetToDelete, setBudgetToDelete] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [transactions, setTransactions] = useState([]);
+  const [totalIncome, setTotalIncome] = useState(0);
 
   useEffect(() => {
     fetchBudgets();
     fetchCategories();
+    fetchTransactions();
   }, []);
 
   const fetchBudgets = async () => {
@@ -69,6 +72,20 @@ export default function Budgets() {
     }
   };
 
+  const fetchTransactions = async () => {
+    try {
+      const res = await api.get("/api/transactions");
+      setTransactions(res.data);
+      // Calculate total income (sum of positive amounts)
+      const income = res.data
+        .filter((t) => Number(t.amount) > 0)
+        .reduce((sum, t) => sum + Number(t.amount), 0);
+      setTotalIncome(income);
+    } catch {
+      // Optionally handle error
+    }
+  };
+
   const resetForm = () => {
     setCategory("");
     setAmount("");
@@ -82,6 +99,18 @@ export default function Budgets() {
       return;
     }
     setLoading(true);
+    const totalBudget = budgets.reduce((sum, b) => sum + Number(b.amount), 0);
+    const availableIncome = totalIncome - (editId ? totalBudget - Number(amount) : totalBudget);
+
+    if (Number(amount) > availableIncome) {
+      setSnackbar({
+        open: true,
+        message: "Total budgets cannot exceed total income.",
+        severity: "error",
+      });
+      setLoading(false);
+      return;
+    }
     try {
       if (editId) {
         await api.put(`/api/budgets/${editId}`, { category, amount });
@@ -191,7 +220,12 @@ export default function Budgets() {
                         {budgets.map((b) => (
                           <TableRow key={b.id}>
                             <TableCell>{b.category}</TableCell>
-                            <TableCell>{b.amount}</TableCell>
+                            <TableCell>
+                              {Number(b.amount).toLocaleString("en-PH", {
+                                style: "currency",
+                                currency: "PHP",
+                              })}
+                            </TableCell>
                             <TableCell>
                               <IconButton onClick={() => handleEdit(b)}>
                                 <EditIcon />

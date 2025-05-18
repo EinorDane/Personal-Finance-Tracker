@@ -25,13 +25,15 @@ const { size } = typography;
 
 const contained = {
   base: {
-    backgroundColor: white.main,
-    minHeight: pxToRem(40),
-    color: text.main,
-    padding: `${pxToRem(10)} ${pxToRem(24)}`,
+    backgroundColor: "#7c3aed", // vibrant purple
+    color: "#fff",
+    borderRadius: "8px",
+    boxShadow: "0 2px 8px 0 rgba(60,72,100,0.08)",
+    transition: "background 0.3s, box-shadow 0.3s",
 
     "&:hover": {
-      backgroundColor: white.main,
+      backgroundColor: "#5b21b6",
+      boxShadow: "0 4px 16px 0 rgba(60,72,100,0.16)",
     },
 
     "&:active, &:active:focus, &:active:hover": {

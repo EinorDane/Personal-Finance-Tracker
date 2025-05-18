@@ -26,22 +26,18 @@ const { borderRadius } = borders;
 const sidenav = {
   styleOverrides: {
     root: {
-      width: pxToRem(250),
+      width: "250px",
       whiteSpace: "nowrap",
       border: "none",
+      background: "linear-gradient(135deg, #232946 0%, #7c3aed 100%)", // purple/blue gradient
+      color: "#fff",
+      transition: "background 0.4s cubic-bezier(.25,.8,.25,1), color 0.3s",
     },
 
     paper: {
-      width: pxToRem(250),
-      backgroundColor: white.main,
-      height: `calc(100vh - ${pxToRem(32)})`,
-      margin: pxToRem(16),
-      borderRadius: borderRadius.xl,
-      border: "none",
-    },
-
-    paperAnchorDockedLeft: {
-      borderRight: "none",
+      width: "250px",
+      background: "inherit",
+      color: "#fff",
     },
   },
 };

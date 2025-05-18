@@ -21,7 +21,9 @@ Coded by www.creative-tim.com
 
 const colors = {
   background: {
-    default: "#f0f2f5",
+    default: "#f4f8fb", // use a solid color, NOT a gradient
+    sidenav: "#232946",
+    card: "#ffffff",
   },
 
   text: {

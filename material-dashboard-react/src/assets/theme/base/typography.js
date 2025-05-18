@@ -58,7 +58,7 @@ const baseDisplayProperties = {
 };
 
 const typography = {
-  fontFamily: baseProperties.fontFamily,
+  fontFamily: ["Inter", "Roboto", "Helvetica", "Arial", "sans-serif"].join(","),
   fontWeightLighter: baseProperties.fontWeightLighter,
   fontWeightLight: baseProperties.fontWeightLight,
   fontWeightRegular: baseProperties.fontWeightRegular,
