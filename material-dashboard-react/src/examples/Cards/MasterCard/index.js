@@ -117,4 +117,19 @@ MasterCard.propTypes = {
   expires: PropTypes.string.isRequired,
 };
 
+const chip = {
+  styleOverrides: {
+    root: {
+      fontWeight: 700,
+      fontSize: "1rem",
+      borderRadius: "8px",
+      padding: "0 10px",
+    },
+    colorPrimary: {
+      background: "linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)",
+      color: "#fff",
+    },
+  },
+};
+
 export default MasterCard;

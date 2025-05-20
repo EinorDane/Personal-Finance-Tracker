@@ -22,9 +22,11 @@ import {
   TableRow,
   Paper,
   IconButton,
+  LinearProgress,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CategoryIcon from "@mui/icons-material/Category";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import MDBox from "components/MDBox";
 import api from "../api";
@@ -162,30 +164,95 @@ export default function Goals() {
                         <TableRow>
                           <TableCell>Name</TableCell>
                           <TableCell>Target</TableCell>
+                          <TableCell>Saved</TableCell>
+                          <TableCell>Progress</TableCell>
+                          <TableCell>Left to Goal</TableCell>
+                          <TableCell>
+                            <CategoryIcon sx={{ mr: 1, color: "#1976d2" }} />
+                            Category
+                          </TableCell>
                           <TableCell>Actions</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {goals.map((g) => (
-                          <TableRow key={g.id}>
-                            <TableCell>{g.name}</TableCell>
-                            <TableCell>{g.target}</TableCell>
-                            <TableCell>
-                              <IconButton onClick={() => handleEdit(g)}>
-                                <EditIcon />
-                              </IconButton>
-                              <IconButton
-                                color="error"
-                                onClick={() => {
-                                  setGoalToDelete(g.id);
-                                  setDeleteDialogOpen(true);
-                                }}
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                            </TableCell>
-                          </TableRow>
-                        ))}
+                        {goals.map((g) => {
+                          const percent =
+                            g.target > 0 ? Math.min((g.saved / g.target) * 100, 100) : 0;
+                          const left = Math.max(Number(g.target) - Number(g.saved), 0);
+                          return (
+                            <TableRow key={g.id}>
+                              <TableCell>{g.name}</TableCell>
+                              <TableCell>
+                                <span
+                                  className={`currency-highlight ${
+                                    g.target > 0 ? "positive" : "negative"
+                                  }`}
+                                >
+                                  {Number(g.target).toLocaleString("en-PH", {
+                                    style: "currency",
+                                    currency: "PHP",
+                                  })}
+                                </span>
+                              </TableCell>
+                              <TableCell>
+                                <span
+                                  className={`currency-highlight ${
+                                    g.saved > 0 ? "positive" : "negative"
+                                  }`}
+                                >
+                                  {Number(g.saved).toLocaleString("en-PH", {
+                                    style: "currency",
+                                    currency: "PHP",
+                                  })}
+                                </span>
+                              </TableCell>
+                              <TableCell>
+                                <Box width={120}>
+                                  <LinearProgress
+                                    variant="determinate"
+                                    value={percent}
+                                    sx={{
+                                      height: 12,
+                                      borderRadius: 6,
+                                      background: "#e3f2fd",
+                                      "& .MuiLinearProgress-bar": {
+                                        background: percent >= 100 ? "#43a047" : "#1976d2",
+                                        transition: "width 1s cubic-bezier(.4,0,.2,1)",
+                                      },
+                                    }}
+                                  />
+                                  <Typography variant="caption">{percent.toFixed(1)}%</Typography>
+                                </Box>
+                              </TableCell>
+                              <TableCell>
+                                <span
+                                  className={`currency-highlight ${
+                                    left > 0 ? "positive" : "negative"
+                                  }`}
+                                >
+                                  {left.toLocaleString("en-PH", {
+                                    style: "currency",
+                                    currency: "PHP",
+                                  })}
+                                </span>
+                              </TableCell>
+                              <TableCell>
+                                <IconButton onClick={() => handleEdit(g)}>
+                                  <EditIcon />
+                                </IconButton>
+                                <IconButton
+                                  color="error"
+                                  onClick={() => {
+                                    setGoalToDelete(g.id);
+                                    setDeleteDialogOpen(true);
+                                  }}
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
                       </TableBody>
                     </Table>
                   </TableContainer>

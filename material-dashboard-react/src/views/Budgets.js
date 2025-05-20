@@ -26,9 +26,11 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Chip,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CategoryIcon from "@mui/icons-material/Category";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import MDBox from "components/MDBox";
 import api from "../api";
@@ -145,6 +147,11 @@ export default function Budgets() {
     setLoading(false);
   };
 
+  const getSpentForCategory = (cat) =>
+    transactions
+      .filter((t) => t.category === cat && Number(t.amount) < 0)
+      .reduce((sum, t) => sum + Math.abs(Number(t.amount)), 0);
+
   return (
     <DashboardLayout>
       <MDBox py={3}>
@@ -211,37 +218,71 @@ export default function Budgets() {
                     <Table>
                       <TableHead>
                         <TableRow>
-                          <TableCell>Category</TableCell>
-                          <TableCell>Amount</TableCell>
+                          <TableCell>
+                            <CategoryIcon sx={{ mr: 1, color: "#1976d2" }} />
+                            Category
+                          </TableCell>
+                          <TableCell>Budgeted</TableCell>
+                          <TableCell>Spent</TableCell>
+                          <TableCell>Left</TableCell>
                           <TableCell>Actions</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {budgets.map((b) => (
-                          <TableRow key={b.id}>
-                            <TableCell>{b.category}</TableCell>
-                            <TableCell>
-                              {Number(b.amount).toLocaleString("en-PH", {
-                                style: "currency",
-                                currency: "PHP",
-                              })}
-                            </TableCell>
-                            <TableCell>
-                              <IconButton onClick={() => handleEdit(b)}>
-                                <EditIcon />
-                              </IconButton>
-                              <IconButton
-                                color="error"
-                                onClick={() => {
-                                  setBudgetToDelete(b.id);
-                                  setDeleteDialogOpen(true);
-                                }}
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                            </TableCell>
-                          </TableRow>
-                        ))}
+                        {budgets.map((b) => {
+                          const spent = getSpentForCategory(b.category);
+                          const left = Number(b.amount) - spent;
+                          return (
+                            <TableRow key={b.id}>
+                              <TableCell>
+                                <Chip
+                                  label={b.category}
+                                  color="primary"
+                                  variant="outlined"
+                                  size="small"
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <span
+                                  className={`currency-highlight ${
+                                    amount > 0 ? "positive" : "negative"
+                                  }`}
+                                >
+                                  {Number(b.amount).toLocaleString("en-PH", {
+                                    style: "currency",
+                                    currency: "PHP",
+                                  })}
+                                </span>
+                              </TableCell>
+                              <TableCell>
+                                {spent.toLocaleString("en-PH", {
+                                  style: "currency",
+                                  currency: "PHP",
+                                })}
+                              </TableCell>
+                              <TableCell>
+                                {left.toLocaleString("en-PH", {
+                                  style: "currency",
+                                  currency: "PHP",
+                                })}
+                              </TableCell>
+                              <TableCell>
+                                <IconButton onClick={() => handleEdit(b)}>
+                                  <EditIcon />
+                                </IconButton>
+                                <IconButton
+                                  color="error"
+                                  onClick={() => {
+                                    setBudgetToDelete(b.id);
+                                    setDeleteDialogOpen(true);
+                                  }}
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
                       </TableBody>
                     </Table>
                   </TableContainer>

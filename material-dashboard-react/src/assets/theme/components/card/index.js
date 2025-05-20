@@ -30,6 +30,8 @@ const card = {
     root: {
       borderRadius: "20px",
       boxShadow: "0 8px 32px 0 rgba(60,72,100,0.16)",
+      background: "rgba(255,255,255,0.92)",
+      backdropFilter: "blur(4px)",
       transition:
         "box-shadow 0.3s cubic-bezier(.25,.8,.25,1), transform 0.3s cubic-bezier(.25,.8,.25,1)",
       "&:hover": {

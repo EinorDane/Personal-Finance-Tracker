@@ -12,7 +12,7 @@ public class Goal {
     private String name;
     private double target;
     private double saved;
-
+    
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

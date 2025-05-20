@@ -25,15 +25,17 @@ const { size } = typography;
 
 const contained = {
   base: {
-    backgroundColor: "#7c3aed", // vibrant purple
+    background: "linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)",
     color: "#fff",
     borderRadius: "8px",
-    boxShadow: "0 2px 8px 0 rgba(60,72,100,0.08)",
+    fontWeight: 700,
+    letterSpacing: "0.5px",
+    boxShadow: "0 4px 16px 0 rgba(25,118,210,0.12)",
     transition: "background 0.3s, box-shadow 0.3s",
 
     "&:hover": {
-      backgroundColor: "#5b21b6",
-      boxShadow: "0 4px 16px 0 rgba(60,72,100,0.16)",
+      background: "linear-gradient(90deg, #1565c0 0%, #1976d2 100%)",
+      boxShadow: "0 8px 32px 0 rgba(25,118,210,0.18)",
     },
 
     "&:active, &:active:focus, &:active:hover": {

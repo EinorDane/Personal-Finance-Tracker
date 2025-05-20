@@ -52,6 +52,7 @@ import divider from "assets/theme/components/divider";
 import tableContainer from "assets/theme/components/table/tableContainer";
 import tableHead from "assets/theme/components/table/tableHead";
 import tableCell from "assets/theme/components/table/tableCell";
+import tableRow from "assets/theme/components/table/tableRow";
 import linearProgress from "assets/theme/components/linearProgress";
 import breadcrumbs from "assets/theme/components/breadcrumbs";
 import slider from "assets/theme/components/slider";
@@ -82,6 +83,7 @@ import dialogTitle from "assets/theme/components/dialog/dialogTitle";
 import dialogContent from "assets/theme/components/dialog/dialogContent";
 import dialogContentText from "assets/theme/components/dialog/dialogContentText";
 import dialogActions from "assets/theme/components/dialog/dialogActions";
+import chip from "assets/theme/components/chip";
 
 export default createTheme({
   breakpoints: { ...breakpoints },
@@ -124,6 +126,7 @@ export default createTheme({
     MuiTableContainer: { ...tableContainer },
     MuiTableHead: { ...tableHead },
     MuiTableCell: { ...tableCell },
+    MuiTableRow: { ...tableRow },
     MuiLinearProgress: { ...linearProgress },
     MuiBreadcrumbs: { ...breadcrumbs },
     MuiSlider: { ...slider },
@@ -153,5 +156,6 @@ export default createTheme({
     MuiDialogContent: { ...dialogContent },
     MuiDialogContentText: { ...dialogContentText },
     MuiDialogActions: { ...dialogActions },
+    MuiChip: { ...chip },
   },
 });

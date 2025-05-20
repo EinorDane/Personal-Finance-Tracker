@@ -28,10 +28,12 @@ import {
   DialogTitle,
   CircularProgress,
   Snackbar,
+  Chip,
 } from "@mui/material";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CategoryIcon from "@mui/icons-material/Category";
 import api from "../api";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import MDBox from "components/MDBox";
@@ -326,7 +328,10 @@ export default function Transactions() {
                         <TableRow>
                           <TableCell>Description</TableCell>
                           <TableCell>Amount</TableCell>
-                          <TableCell>Category</TableCell>
+                          <TableCell>
+                            <CategoryIcon sx={{ mr: 1, color: "#1976d2" }} />
+                            Category
+                          </TableCell>
                           <TableCell>Date</TableCell>
                           <TableCell>Actions</TableCell>
                         </TableRow>
@@ -341,7 +346,14 @@ export default function Transactions() {
                                 currency: "PHP",
                               })}
                             </TableCell>
-                            <TableCell>{t.category}</TableCell>
+                            <TableCell>
+                              <Chip
+                                label={t.category}
+                                color="primary"
+                                variant="outlined"
+                                size="small"
+                              />
+                            </TableCell>
                             <TableCell>{t.date}</TableCell>
                             <TableCell>
                               <IconButton onClick={() => handleEdit(t)}>

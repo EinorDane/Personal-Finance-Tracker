@@ -47,8 +47,8 @@ const colors = {
   },
 
   primary: {
-    main: "#e91e63",
-    focus: "#e91e63",
+    main: "#1976d2",
+    focus: "#1565c0",
   },
 
   secondary: {
@@ -57,23 +57,23 @@ const colors = {
   },
 
   info: {
-    main: "#1A73E8",
-    focus: "#1662C4",
+    main: "#1e88e5",
+    focus: "#1565c0",
   },
 
   success: {
-    main: "#4CAF50",
-    focus: "#67bb6a",
+    main: "#43a047",
+    focus: "#388e3c",
   },
 
   warning: {
-    main: "#fb8c00",
-    focus: "#fc9d26",
+    main: "#ffa726",
+    focus: "#fb8c00",
   },
 
   error: {
-    main: "#F44335",
-    focus: "#f65f53",
+    main: "#e53935",
+    focus: "#b71c1c",
   },
 
   light: {

@@ -17,9 +17,11 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import { Line } from "react-chartjs-2";
+import CountUp from "react-countup";
 
 export default function Dashboard() {
   const [transactions, setTransactions] = useState([]);
+  const [goals, setGoals] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -27,6 +29,10 @@ export default function Dashboard() {
       .get("/api/transactions")
       .then((res) => setTransactions(res.data))
       .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    api.get("/api/goals").then((res) => setGoals(res.data));
   }, []);
 
   const totalIncome = transactions
@@ -54,6 +60,16 @@ export default function Dashboard() {
     ],
   };
 
+  const groupByMonth = (txns) => {
+    return txns.reduce((acc, t) => {
+      const month = t.date.slice(0, 7); // "YYYY-MM"
+      if (!acc[month]) acc[month] = [];
+      acc[month].push(t);
+      return acc;
+    }, {});
+  };
+  const monthlyHistory = groupByMonth(transactions);
+
   return (
     <Box sx={{ p: 3, ml: "250px" }}>
       <Typography variant="h4" color="text.primary" gutterBottom>
@@ -72,8 +88,8 @@ export default function Dashboard() {
                     <AccountBalanceWalletIcon sx={{ mr: 1, verticalAlign: "middle" }} />
                     Balance
                   </Typography>
-                  <Typography variant="h5">
-                    {balance.toLocaleString("en-PH", { style: "currency", currency: "PHP" })}
+                  <Typography variant="h5" className="currency-highlight">
+                    <CountUp end={balance} duration={1.2} separator="," decimals={2} prefix="₱" />
                   </Typography>
                 </CardContent>
               </Card>
@@ -86,7 +102,11 @@ export default function Dashboard() {
                     Income
                   </Typography>
                   <Typography variant="h5" color="success.main">
-                    {totalIncome.toLocaleString("en-PH", { style: "currency", currency: "PHP" })}
+                    <span
+                      className={`currency-highlight ${totalIncome > 0 ? "positive" : "negative"}`}
+                    >
+                      {totalIncome.toLocaleString("en-PH", { style: "currency", currency: "PHP" })}
+                    </span>
                   </Typography>
                 </CardContent>
               </Card>
@@ -99,10 +119,14 @@ export default function Dashboard() {
                     Expenses
                   </Typography>
                   <Typography variant="h5" color="error.main">
-                    {Math.abs(totalExpense).toLocaleString("en-PH", {
-                      style: "currency",
-                      currency: "PHP",
-                    })}
+                    <span
+                      className={`currency-highlight ${totalExpense < 0 ? "positive" : "negative"}`}
+                    >
+                      {Math.abs(totalExpense).toLocaleString("en-PH", {
+                        style: "currency",
+                        currency: "PHP",
+                      })}
+                    </span>
                   </Typography>
                 </CardContent>
               </Card>
@@ -134,9 +158,55 @@ export default function Dashboard() {
           <Card sx={{ my: 4 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
-                Spending Trend
+                Monthly History
               </Typography>
-              <Line data={chartData} />
+              {Object.keys(monthlyHistory)
+                .sort((a, b) => b.localeCompare(a))
+                .slice(0, 2) // Only show the last 2 months for simplicity
+                .map((month) => (
+                  <Box key={month} mb={2}>
+                    <Typography variant="subtitle1">{month}</Typography>
+                    <List>
+                      {monthlyHistory[month].map((t) => (
+                        <ListItem key={t.id}>
+                          <ListItemText
+                            primary={`${t.description} (${t.category})`}
+                            secondary={`${t.date} — ${Number(t.amount).toLocaleString("en-PH", {
+                              style: "currency",
+                              currency: "PHP",
+                            })}`}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Box>
+                ))}
+            </CardContent>
+          </Card>
+          <Card sx={{ my: 4 }}>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Goals Progress
+              </Typography>
+              <List>
+                {goals.map((g) => (
+                  <ListItem key={g.id}>
+                    <ListItemText
+                      primary={g.name}
+                      secondary={`Saved: ${Number(g.saved).toLocaleString("en-PH", {
+                        style: "currency",
+                        currency: "PHP",
+                      })} / Target: ${Number(g.target).toLocaleString("en-PH", {
+                        style: "currency",
+                        currency: "PHP",
+                      })}`}
+                    />
+                  </ListItem>
+                ))}
+                {goals.length === 0 && (
+                  <Typography color="text.secondary">No goals set.</Typography>
+                )}
+              </List>
             </CardContent>
           </Card>
         </>

@@ -105,4 +105,16 @@ SimpleBlogCard.propTypes = {
   }).isRequired,
 };
 
+const tableRow = {
+  styleOverrides: {
+    root: {
+      "&:hover": {
+        background: "#f0f7fa",
+        transition: "background 0.2s",
+      },
+    },
+  },
+};
+
 export default SimpleBlogCard;
+export { tableRow };

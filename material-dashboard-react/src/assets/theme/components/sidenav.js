@@ -29,7 +29,7 @@ const sidenav = {
       width: "250px",
       whiteSpace: "nowrap",
       border: "none",
-      background: "linear-gradient(135deg, #232946 0%, #7c3aed 100%)", // purple/blue gradient
+      background: "linear-gradient(135deg, #232946 0%, #7c3aed 100%)",
       color: "#fff",
       transition: "background 0.4s cubic-bezier(.25,.8,.25,1), color 0.3s",
     },

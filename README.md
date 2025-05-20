@@ -1,4 +1,4 @@
-# Running This Project on a Different Device
+# Financia - Personal Finance Tracker
 
 ## Prerequisites
 
@@ -17,9 +17,11 @@
 ## Step 1: Set Up the Database
 
 1. **Start MySQL Server** (use MySQL Workbench or Services app).
+
 2. **Create the database and tables:**
    - Open MySQL Command Line or MySQL Workbench.
    - Run the following SQL:
+
      ```sql
      CREATE DATABASE IF NOT EXISTS financetracker;
      USE financetracker;
@@ -32,34 +34,34 @@
      );
 
      CREATE TABLE IF NOT EXISTS categories (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255)
-    );
+       id BIGINT AUTO_INCREMENT PRIMARY KEY,
+       name VARCHAR(255)
+     );
 
-        CREATE TABLE IF NOT EXISTS transactions (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    amount DOUBLE,
-    category VARCHAR(255),
-    date DATE,
-    description VARCHAR(255),
-    recurrence_rule VARCHAR(255),
-    recurring BIT
-    );
+     CREATE TABLE IF NOT EXISTS transactions (
+       id BIGINT AUTO_INCREMENT PRIMARY KEY,
+       amount DOUBLE,
+       category VARCHAR(255),
+       date DATE,
+       description VARCHAR(255),
+       recurrence_rule VARCHAR(255),
+       recurring BIT
+     );
 
-        CREATE TABLE IF NOT EXISTS budget (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    amount DOUBLE,
-    category VARCHAR(255)
-    );
+     CREATE TABLE IF NOT EXISTS budget (
+       id BIGINT AUTO_INCREMENT PRIMARY KEY,
+       amount DOUBLE,
+       category VARCHAR(255)
+     );
 
-        CREATE TABLE IF NOT EXISTS goal (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255),
-    saved DOUBLE,
-    target DOUBLE
-    );
-        ```
-        
+     CREATE TABLE IF NOT EXISTS goal (
+       id BIGINT AUTO_INCREMENT PRIMARY KEY,
+       name VARCHAR(255),
+       saved DOUBLE,
+       target DOUBLE
+     );
+     ```
+
 3. **(Optional) Restore from a backup:**  
    If you have a backup file (e.g., `db_backups\financetracker_backup_YYYY-MM-DD_HH-MM-SS.sql`), run:
    ```
@@ -117,6 +119,18 @@
 
 ---
 
+## Features
+
+- **Dashboard**: View balance, income, expenses, recent transactions, and spending trends.
+- **Budgets**: Set and manage budgets per category. Budgets cannot exceed total income.
+- **Transactions**: Add, edit, and delete transactions. Each transaction can be marked as Income or Expense using a selector. Amounts are automatically signed based on type.
+- **Reports**: Visualize your spending and income trends.
+- **Goals**: Set savings goals and track progress.
+- **Database Backup & Restore**: Easily back up and restore your finance data.
+- **Currency**: All amounts are displayed in Philippine Peso (₱).
+
+---
+
 ## Step 5: Database Backup & Restore
 
 **To back up the database:**
@@ -141,6 +155,7 @@
 - **Port conflicts:** Make sure nothing else is using ports 8080 (backend) or 3000 (frontend).
 - **Database errors:** Ensure MySQL is running and credentials are correct.
 - **Dependencies:** If `npm install` or `gradlew bootRun` fails, check Node.js and Java installations.
+- **Visual issues:** If the background gradient or currency formatting is not showing, hard-refresh your browser and ensure you have the latest code.
 
 ---
 
